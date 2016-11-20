@@ -1,0 +1,69 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<dom-module id="midi-manager">
+    <template>
+        <style>
+            :host {}
+        </style>
+    </template>
+    <script>
+        Polymer({
+            is: "midi-manager",
+            observers: [],
+            behaviors: [],
+            listeners: {},
+            properties: {},
+            onMIDIMessage: function (event) {
+                var data = event.data,
+                    cmd = data[0] >> 4,
+                    channel = data[0] & 0xf,
+                    type = data[0] & 0xf0, // channel agnostic message type. Thanks, Phil Burk.
+                    note = data[1],
+                    velocity = data[2];
+                // with pressure and tilt off note off: 128, cmd: 8 note on: 144, cmd: 9 pressure / tilt on pressure: 176, cmd 11: bend: 224, cmd: 14
+                switch (type) {
+                    case 144: // noteOn message
+                        this.noteOn(note, velocity);
+                        break;
+                    case 128: // noteOff message
+                        this.noteOff(note, velocity);
+                        break;
+                }
+                //console.log('data', data, 'cmd', cmd, 'channel', channel);
+            },
+            noteOn: function (midiNote, velocity) {
+                // player(midiNote, velocity);
+                this.fire('note-on', {midiNote:midiNote, velocity:velocity}) ;
+            },
+            noteOff: function (midiNote, velocity) {
+                this.fire('note-on', {midiNote:midiNote, velocity:velocity}) ;
+            },
+            logColeto: function () {
+                console.log("coleto");
+            },
+            _onMIDISuccess: function (midiAccess) {
+                var midi = midiAccess;
+                var inputs = midi.inputs.values();
+                for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+                    console.log(input.value);
+                    input.value.onmidimessage = this.onMIDIMessage.bind(this) ;
+                }
+            },
+            _onMIDIFailure: function (e) {
+                // when we get a failed response, run this code
+                console.log("No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim " + e);
+            },
+            _requestMIDIAccess: function () {
+                if (navigator.requestMIDIAccess) {
+                    navigator.requestMIDIAccess({
+                        sysex: false // this defaults to 'false' and we won't be covering sysex in this article.
+                    }).then(this._onMIDISuccess.bind(this), this._onMIDIFailure);
+                } else {
+                    alert("No MIDI support in your browser.");
+                }
+            },
+            ready: function () {
+                this._requestMIDIAccess();
+            }
+        });
+    </script>
+</dom-module>
