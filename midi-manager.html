@@ -35,10 +35,7 @@
                 this.fire('note-on', {midiNote:midiNote, velocity:velocity}) ;
             },
             noteOff: function (midiNote, velocity) {
-                this.fire('note-on', {midiNote:midiNote, velocity:velocity}) ;
-            },
-            logColeto: function () {
-                console.log("coleto");
+                this.fire('note-off', {midiNote:midiNote, velocity:velocity}) ;
             },
             _onMIDISuccess: function (midiAccess) {
                 var midi = midiAccess;
