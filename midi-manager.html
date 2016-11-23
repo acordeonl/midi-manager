@@ -23,12 +23,14 @@
                 switch (type) {
                     case 144: // noteOn message
                         this.fire('note-on', {
+                            channel:channel,
                             midiNote: note,
                             velocity: velocity
                         });
                         break;
                     case 128: // noteOff message
                         this.fire('note-off', {
+                            channel:channel,
                             midiNote: note,
                             velocity: velocity
                         });
