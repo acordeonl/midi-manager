@@ -22,17 +22,21 @@
                 // with pressure and tilt off note off: 128, cmd: 8 note on: 144, cmd: 9 pressure / tilt on pressure: 176, cmd 11: bend: 224, cmd: 14
                 switch (type) {
                     case 144: // noteOn message
-                        this.fire('note-on', {
+                        this.fire('action', {
                             channel:channel,
                             midiNote: note,
-                            velocity: velocity
+                            time:context.currentTime,
+                            cmd:'note-on',
+                            origin:'instrument'
                         });
                         break;
                     case 128: // noteOff message
-                        this.fire('note-off', {
+                        this.fire('action', {
                             channel:channel,
                             midiNote: note,
-                            velocity: velocity
+                            time:context.currentTime,
+                            cmd:'note-off',
+                            origin:'instrument'
                         });
                         break;
                     case 176:
