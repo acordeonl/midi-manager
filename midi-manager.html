@@ -40,7 +40,7 @@
                         });
                         break;
                     case 176:
-                        this.fire('velocity-change', {velocity: velocity});
+                        this.fire('action', {cmd:'velocity-change',velocity: velocity,origin:'instrument',time:context.currentTime});
                         break;
                 }
                 //console.log('data', data, 'cmd', cmd, 'channel', channel);
