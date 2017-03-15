@@ -49,7 +49,7 @@
                 var midi = midiAccess;
                 var inputs = midi.inputs.values();
                 for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
-                    console.log(input.value);
+                    // console.log(input.value);
                     input.value.onmidimessage = this.onMIDIMessage.bind(this);
                 }
             },
